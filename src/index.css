@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Syne", sans-serif;
+  --font-body: "Space Grotesk", sans-serif;
+  --font-label: "Space Grotesk", sans-serif;
+
+  --color-surface: #0a0a0a;
+  --color-surface-container: #141414;
+  --color-surface-container-low: #111111;
+  --color-surface-container-lowest: #000000;
+  --color-surface-dim: #1f1f1f;
+  --color-surface-variant: #292929;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #a3a3a3;
+  --color-primary: #ffffff;
+  --color-primary-container: #333333;
+  --color-primary-fixed: #e5e5e5;
+  --color-on-primary: #000000;
+  --color-on-primary-fixed: #000000;
+  --color-outline: #525252;
+  --color-outline-variant: #262626;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-body antialiased;
+  }
+}
+
+/* Custom styling applied from user request */
+div#root:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > section:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(4) > h3:nth-of-type(1) {
+  border-color: #000000;
+  font-style: italic;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > section:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(4) > p:nth-of-type(1) {
+  font-weight: bold;
+}
+
+.glass-nav {
+  @apply bg-surface-container/70 backdrop-blur-[20px];
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.editorial-underline {
+  @apply relative no-underline;
+}
+.editorial-underline::after {
+  content: '';
+  @apply absolute left-0 -bottom-1 w-full h-[1px] bg-primary;
+}
