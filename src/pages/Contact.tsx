@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Input } from '@/src/components/Input';
 import GradientMenu from '@/src/components/ui/gradient-menu';
-import { IoLogoWhatsapp, IoLogoInstagram, IoMailOutline, IoCheckmarkCircleOutline, IoWarningOutline } from 'react-icons/io5';
+import { IoLogoWhatsapp, IoLogoInstagram, IoMapOutline, IoCheckmarkCircleOutline, IoWarningOutline } from 'react-icons/io5';
+import { SiGooglemaps } from 'react-icons/si';
 import { WebGLShader } from '@/src/components/ui/web-gl-shader';
 import { LiquidButton } from '@/src/components/ui/liquid-glass-button';
 
@@ -151,11 +152,11 @@ export default function Contact() {
                     href: 'https://www.instagram.com/_shrinidhi_creations_?igsh=MXIwdnIwbTluNjJocA=='
                   },
                   {
-                    title: 'Email',
-                    icon: <IoMailOutline />,
-                    gradientFrom: '#ffffff',
-                    gradientTo: '#a3a3a3',
-                    href: 'mailto:9jaideepbh@gmail.com'
+                    title: 'Google Maps',
+                    icon: <SiGooglemaps />,
+                    gradientFrom: '#4285F4',
+                    gradientTo: '#34A853',
+                    href: 'https://maps.app.goo.gl/z2XMqFU6jzHomdpA6?g_st=ic'
                   }
                 ]} />
               </div>
@@ -164,9 +165,10 @@ export default function Contact() {
             <div>
               <h4 className="font-label text-[14px] leading-[17px] uppercase tracking-[0.2em] text-white mb-4 font-bold not-italic no-underline">Studio Location</h4>
               <p className="font-[Verdana] text-[#e0d95d] font-bold italic leading-relaxed">
-                124 Creative District<br />
-                Mumbai, MH 400001<br />
-                India
+                No 57 Samruddhi nelaya muneshwara layout<br />
+                behind Parle biscuit factory<br />
+                near Arvindh Electrical’s Nagasandra post<br />
+                Bangalore 560073
               </p>
             </div>
           </div>

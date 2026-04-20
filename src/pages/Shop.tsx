@@ -1,12 +1,88 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 
-const categories = ['All', 'F1 PRINT', '3D Prints', 'MOVIE PRINT'];
+const categories = ['All', 'F1 PRINT', '3D Prints', 'MOVIE PRINT', 'KANNADA'];
+
+function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, imagesLoaded: Record<number, boolean>, onImageLoad: (id: number) => void }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "200px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      whileHover={{ scale: 1.02, y: -6 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="group flex flex-col"
+    >
+      <Link to={`/product/${product.id}`} className="cursor-pointer">
+        {/* Image Container with Soft Shadow & Rounded Corners */}
+        <div className="relative aspect-[4/5] bg-[#111] rounded-2xl md:rounded-3xl overflow-hidden mb-4 shadow-sm border border-white/5 group-hover:border-[#632dbc]/30 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500">
+          {!imagesLoaded[product.id] && (
+            <div className="absolute inset-0 animate-pulse bg-white/5 flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-[#632dbc]/20 border-t-[#632dbc] rounded-full animate-spin" />
+            </div>
+          )}
+          {isInView ? (
+            <img
+              alt={product.name}
+              className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imagesLoaded[product.id] ? 'opacity-100 scale-100' : 'opacity-0 scale-110'}`}
+              src={product.media[0].url}
+              loading="lazy"
+              onLoad={() => onImageLoad(product.id)}
+            />
+          ) : (
+            <div className="w-full h-full bg-[#111]" />
+          )}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+        </div>
+
+        {/* Product Info (Minimalist) */}
+        <div className="px-1 flex flex-col gap-1 transition-transform duration-500 group-hover:translate-x-1">
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-bold text-sm md:text-base text-gray-100 leading-tight line-clamp-1">{product.name}</h3>
+            <span className="font-semibold text-sm md:text-base text-gray-100">{product.price}</span>
+          </div>
+          <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-1">{product.desc}</p>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
 
 export default function Shop() {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  
+  const [activeCategory, setActiveCategory] = useState(categoryParam || 'All');
+  const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (categoryParam) {
+      setActiveCategory(categoryParam);
+    } else {
+      setActiveCategory('All');
+    }
+  }, [categoryParam]);
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    if (cat === 'All') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', cat);
+    }
+    setSearchParams(searchParams);
+  };
+
+  const handleImageLoad = (id: number) => {
+    setImagesLoaded(prev => ({ ...prev, [id]: true }));
+  };
 
   const filteredProducts = activeCategory === 'All' 
     ? products 
@@ -121,7 +197,7 @@ export default function Shop() {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => handleCategoryChange(cat)}
               className={`flex-shrink-0 px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all active:scale-95 ${
                 activeCategory === cat 
                   ? 'bg-white text-black shadow-[0_4px_12px_rgba(255,255,255,0.15)]' 
@@ -137,38 +213,12 @@ export default function Shop() {
         <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
           <AnimatePresence>
             {filteredProducts.map((product) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ scale: 1.02, y: -6 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                key={product.id}
-                className="group flex flex-col"
-              >
-                <Link to={`/product/${product.id}`} className="cursor-pointer">
-                  {/* Image Container with Soft Shadow & Rounded Corners */}
-                  <div className="relative aspect-[4/5] bg-[#111] rounded-2xl md:rounded-3xl overflow-hidden mb-4 shadow-sm group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500">
-                    <img
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      src={product.media[0].url}
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-                  </div>
-
-                  {/* Product Info (Minimalist) */}
-                  <div className="px-1 flex flex-col gap-1 transition-transform duration-500 group-hover:translate-x-1">
-                    <div className="flex justify-between items-start gap-2">
-                      <h3 className="font-bold text-sm md:text-base text-gray-100 leading-tight line-clamp-1">{product.name}</h3>
-                      <span className="font-semibold text-sm md:text-base text-gray-100">{product.price}</span>
-                    </div>
-                    <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-1">{product.desc}</p>
-                  </div>
-                </Link>
-              </motion.div>
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                imagesLoaded={imagesLoaded} 
+                onImageLoad={handleImageLoad} 
+              />
             ))}
           </AnimatePresence>
         </motion.div>
