@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useInView } from 'motion/react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 
-const categories = ['All', 'F1 PRINT', '3D Prints', 'MOVIE PRINT', 'KANNADA'];
+const categories = ['All', 'F1 PRINT', 'MOVIE PRINT', 'KANNADA', '3D PRINT'];
 
 function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, imagesLoaded: Record<number, boolean>, onImageLoad: (id: number) => void }) {
   const ref = useRef(null);
@@ -210,18 +210,30 @@ export default function Shop() {
         </div>
 
         {/* Clean Premium Grid */}
-        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-          <AnimatePresence>
-            {filteredProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                imagesLoaded={imagesLoaded} 
-                onImageLoad={handleImageLoad} 
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        {filteredProducts.length > 0 ? (
+          <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  imagesLoaded={imagesLoaded} 
+                  onImageLoad={handleImageLoad} 
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-white/10 rounded-3xl"
+          >
+            <div className="text-gray-500 font-mono tracking-widest uppercase mb-4">// System.Status: [EMPTY]</div>
+            <h3 className="font-headline text-3xl md:text-5xl font-black italic uppercase tracking-tighter opacity-20">Coming Soon</h3>
+            <p className="text-gray-400 mt-4 max-w-xs text-sm uppercase tracking-widest leading-relaxed">The new collection is currently being forged. Return soon.</p>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

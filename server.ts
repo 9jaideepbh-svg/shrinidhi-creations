@@ -37,8 +37,12 @@ async function startServer() {
     app.use(vite.middlewares);
     console.log('Vite development server middleware integrated');
   } else {
-    // Serve static files in production with robust aggressive caching
-    const distPath = path.join(__dirname, 'dist');
+    // Serve static files in production
+    // When running from dist/server.js, __dirname IS the dist folder.
+    // When running server.ts directly, we need to point into dist.
+    const distPath = __dirname.endsWith('dist') ? __dirname : path.join(__dirname, 'dist');
+    console.log(`Resolved production dist path: ${distPath}`);
+    
     app.use(express.static(distPath, {
       maxAge: '1d', // Cache for 1 day by default
       etag: true,

@@ -8,10 +8,10 @@ import { StaggerTestimonials } from '@/src/components/ui/stagger-testimonials';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const collections = [
-  { name: 'F1 PRINT', img: '/f1-14-1.jpg' },
-  { name: '3D Prints', img: '/3d-15-1.jpg' },
-  { name: 'MOVIE PRINT', img: '/movie-12-1.jpg' },
-  { name: 'KANNADA', img: '/kannada-1.jpg' },
+  { name: 'F1 PRINT', img: '/red-bull-1.jpg' },
+  { name: 'MOVIE PRINT', img: '/toxic-1.jpg' },
+  { name: 'KANNADA', img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop' },
+  { name: '3D PRINT', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=400&auto=format&fit=crop' },
 ];
 
 export default function Home() {
@@ -167,76 +167,78 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Factory / About Us Section */}
-      <section className="mt-32 px-6 max-w-screen-xl mx-auto w-full">
-        <div className="flex flex-col items-center">
-          <div className="inline-block px-3 py-1 bg-[#632dbc]/10 border border-[#632dbc]/20 rounded-full mb-6">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#632dbc]">The Source</span>
-          </div>
-          <h3 className="font-headline text-4xl md:text-6xl text-center uppercase tracking-tighter font-black italic mb-12">
-            Inside the <br/> Factory
-          </h3>
-          
-          <div className="relative w-full max-w-md group cursor-pointer" onClick={() => setIsFactoryExpanded(true)}>
-            <div className="aspect-[9/16] md:aspect-[3/4] bg-[#080808] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-[#632dbc]/50 group-hover:scale-[1.02] flex items-center justify-center">
-              <img 
-                src="/factory-cover.jpg" 
-                alt="Inside the Factory"
-                loading="lazy"
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-500"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/40 group-hover:bg-black/20 transition-colors">
-                 <div className="w-16 h-16 bg-[#632dbc] rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(99,45,188,0.3)] transition-transform group-hover:scale-110">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 ml-1">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                 </div>
-                 <p className="mt-4 font-headline text-sm font-black uppercase tracking-widest italic group-hover:translate-y-1 transition-transform">Tap to see how we build</p>
-              </div>
+      {/* Factory / About Us Section - Removed on mobile for testing stability */}
+      {isDesktop && (
+        <section className="mt-32 px-6 max-w-screen-xl mx-auto w-full">
+          <div className="flex flex-col items-center">
+            <div className="inline-block px-3 py-1 bg-[#632dbc]/10 border border-[#632dbc]/20 rounded-full mb-6">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#632dbc]">The Source</span>
             </div>
-            {/* Ambient Glow */}
-            <div className="absolute -inset-10 bg-[#632dbc]/10 blur-3xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity -z-10" />
+            <h3 className="font-headline text-4xl md:text-6xl text-center uppercase tracking-tighter font-black italic mb-12">
+              Inside the <br/> Factory
+            </h3>
+            
+            <div className="relative w-full max-w-md group cursor-pointer" onClick={() => setIsFactoryExpanded(true)}>
+              <div className="aspect-[9/16] md:aspect-[3/4] bg-[#080808] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-[#632dbc]/50 group-hover:scale-[1.02] flex items-center justify-center">
+                <img 
+                  src="/factory-cover.jpg" 
+                  alt="Inside the Factory"
+                  loading="lazy"
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-500"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/40 group-hover:bg-black/20 transition-colors">
+                   <div className="w-16 h-16 bg-[#632dbc] rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(99,45,188,0.3)] transition-transform group-hover:scale-110">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 ml-1">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                   </div>
+                   <p className="mt-4 font-headline text-sm font-black uppercase tracking-widest italic group-hover:translate-y-1 transition-transform">Tap to see how we build</p>
+                </div>
+              </div>
+              {/* Ambient Glow */}
+              <div className="absolute -inset-10 bg-[#632dbc]/10 blur-3xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity -z-10" />
+            </div>
           </div>
-        </div>
 
-        {/* Video Expansion Modal */}
-        <AnimatePresence>
-          {isFactoryExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4"
-              onClick={() => setIsFactoryExpanded(false)}
-            >
+          {/* Video Expansion Modal */}
+          <AnimatePresence>
+            {isFactoryExpanded && (
               <motion.div
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="relative h-[80vh] aspect-[9/16] rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/10"
-                onClick={(e) => e.stopPropagation()}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4"
+                onClick={() => setIsFactoryExpanded(false)}
               >
-                 <video 
-                    autoPlay 
-                    controls 
-                    className="w-full h-full object-contain"
-                    src="/factory-video.mp4" 
-                 />
-                 <button 
-                  onClick={() => setIsFactoryExpanded(false)}
-                  className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 border border-white/10 text-white hover:bg-white/20 transition-all z-50"
-                 >
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                   </svg>
-                 </button>
+                <motion.div
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="relative h-[80vh] aspect-[9/16] rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/10"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                   <video 
+                      autoPlay 
+                      controls 
+                      className="w-full h-full object-contain"
+                      src="/factory-video.mp4" 
+                   />
+                   <button 
+                    onClick={() => setIsFactoryExpanded(false)}
+                    className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 border border-white/10 text-white hover:bg-white/20 transition-all z-50"
+                   >
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                     </svg>
+                   </button>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
+            )}
+          </AnimatePresence>
+        </section>
+      )}
 
       {/* Testimonials Section */}
       <section className="mt-40 px-6 max-w-screen-xl mx-auto w-full">
@@ -252,7 +254,7 @@ export default function Home() {
         <div className="bg-primary text-on-primary p-12 md:p-24 text-center flex flex-col items-center">
           <h3 className="font-headline text-4xl md:text-6xl uppercase tracking-tighter font-extrabold mb-6">Ready for your custom drop?</h3>
           <p className="font-body text-on-primary/80 max-w-lg mb-10">
-            Skip the cart. Talk directly to our design team to get a quote, discuss fabrics, and finalize your 3D mockups.
+            Skip the cart. Talk directly to our design team to get a quote, discuss fabrics, and finalize your designs.
           </p>
           <Link to="/contact">
             <Button variant="secondary" className="border-on-primary text-on-primary hover:bg-on-primary hover:text-primary">

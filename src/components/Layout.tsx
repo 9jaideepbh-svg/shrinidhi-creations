@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Home, Grid, Palette, MessageSquare } from 'lucide-react';
+import { Menu, Home, Grid, MessageSquare } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -9,7 +9,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: Grid, label: 'Gallery', path: '/gallery' },
-    { icon: Palette, label: 'Customize', path: '/customize' },
     { icon: MessageSquare, label: 'Contact', path: '/contact' },
   ];
 
