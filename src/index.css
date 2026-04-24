@@ -49,3 +49,17 @@
   content: '';
   @apply absolute left-0 -bottom-1 w-full h-[1px] bg-primary;
 }
+
+@keyframes glitch-flicker {
+  0% { opacity: 1; filter: brightness(1) drop-shadow(0 0 0px rgba(255,255,255,0)); }
+  2% { opacity: 0; }
+  4% { opacity: 1; filter: brightness(2) drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
+  5% { opacity: 0; }
+  6% { opacity: 1; filter: brightness(1) drop-shadow(0 0 0px rgba(255,255,255,0)); }
+  100% { opacity: 1; }
+}
+
+.animate-flicker-letter {
+  display: inline-block;
+  animation: glitch-flicker 3s infinite ease-in-out;
+}

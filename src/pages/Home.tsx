@@ -55,6 +55,27 @@ export default function Home() {
     if (mobileVideoRef.current) mobileVideoRef.current.muted = !isDesktop ? isMuted : true;
   }, [isMuted, isDesktop]);
 
+  // Auto-stop audio when video is scrolled out of view (3/4 cropped)
+  useEffect(() => {
+    const section = document.getElementById('hero-section');
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio < 0.25 || !entry.isIntersecting) {
+            setIsMuted(true);
+            if (desktopVideoRef.current) desktopVideoRef.current.muted = true;
+            if (mobileVideoRef.current) mobileVideoRef.current.muted = true;
+          }
+        });
+      },
+      { threshold: [0.25] }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -63,7 +84,7 @@ export default function Home() {
       className="flex flex-col"
     >
       {/* Hero Section */}
-      <section className="relative h-[85vh] w-full overflow-hidden bg-black">
+      <section id="hero-section" className="relative h-[85vh] w-full overflow-hidden bg-black">
         {isDesktop ? (
           <video
             key="desktop-video"
@@ -213,7 +234,7 @@ export default function Home() {
                 Express yourself with our unique styles, heavyweight fabrics, and uncompromising quality.
               </p>
               <div className="flex gap-4">
-                <a href="https://wa.me/916360949521" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-[#25D366] hover:bg-white/10 transition-colors">
+                <a href="https://wa.me/918553868587" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-[#25D366] hover:bg-white/10 transition-colors">
                   <IoLogoWhatsapp size={20} />
                 </a>
                 <a href="https://www.instagram.com/_shrinidhi_creations_?igsh=MXIwdnIwbTluNjJocA==" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-[#E1306C] hover:bg-white/10 transition-colors">
@@ -261,8 +282,8 @@ export default function Home() {
             <div className="space-y-4 font-body text-base text-gray-300">
               <div className="flex items-start gap-3">
                 <Phone size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href="tel:+916360949521" className="hover:text-white transition-colors">
-                  +91 6360949521
+                <a href="tel:+918553868587" className="hover:text-white transition-colors">
+                  +91 8553868587
                 </a>
               </div>
               <div className="flex items-start gap-3">
@@ -300,7 +321,7 @@ export default function Home() {
         </div>
 
         {/* Admin Portal — subtle footer link & Copyright */}
-        <div className="max-w-screen-xl mx-auto w-full flex flex-col md:flex-row items-center justify-between border-t border-white/5 mt-16 pt-8">
+        <div className="max-w-screen-xl mx-auto w-full flex flex-col md:flex-row items-center justify-between border-t border-white/5 mt-16 pt-8 pb-12">
           <p className="text-xs text-white/30 font-body uppercase tracking-widest mb-4 md:mb-0">
             © 2026 Shrinidhi Creations. All Rights Reserved.
           </p>
@@ -310,6 +331,41 @@ export default function Home() {
           >
             ⚙ Staff Login
           </Link>
+        </div>
+
+        {/* Developer Credit Box */}
+        <div className="flex justify-center mt-4 pb-8 z-20 relative">
+          <a
+            href="https://wa.me/919606643005"
+            target="_blank"
+            rel="noreferrer"
+            className="group relative overflow-hidden rounded-2xl p-[3px] cursor-pointer"
+          >
+             {/* Aggressive fast conic gradient spin */}
+             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ff3366_30%,#393BB2_70%,#000000_100%)]"></span>
+             
+             {/* Inner UI container */}
+             <div className="relative flex h-full w-full items-center justify-center bg-[#050505] rounded-[0.9rem] px-8 py-3 backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0a0a0a] gap-4 shadow-[0_0_30px_rgba(255,51,102,0.4)]">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">⚡</span>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-white/60 uppercase tracking-[0.4em] font-black pb-1">Developed By</span>
+                  <span className="text-white font-headline font-black italic tracking-widest text-2xl bg-clip-text text-transparent bg-gradient-to-r from-[#ff3366] to-[#393BB2] group-hover:from-[#ff6699] group-hover:to-[#4a4ec4] transition-all duration-300 flex">
+                    {"JD Developers".split('').map((char, index) => (
+                      <span 
+                        key={index} 
+                        className="animate-flicker-letter" 
+                        style={{ 
+                          animationDelay: `${index * 0.15}s`, 
+                          width: char === ' ' ? '0.25em' : 'auto' 
+                        }}
+                      >
+                        {char}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+             </div>
+          </a>
         </div>
       </footer>
     </motion.div>

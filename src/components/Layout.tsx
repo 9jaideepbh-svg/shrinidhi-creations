@@ -46,9 +46,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <header className="fixed top-0 left-0 right-0 z-50 glass-nav h-20 flex items-center justify-between px-4 md:px-6">
           <Link to="/" className="flex flex-shrink-0 items-center justify-start w-12 md:w-16">
             <img 
-              src="/brand-logo.jpg" 
+              src="/logo.webp" 
               alt="Shrinidhi Creations Logo" 
-              className="h-10 w-10 md:h-12 md:w-12 object-cover rounded-full shadow-sm"
+              className="h-12 w-12 md:h-16 md:w-16 object-cover scale-110 rounded-full shadow-md bg-black border border-white/10"
             />
           </Link>
           
