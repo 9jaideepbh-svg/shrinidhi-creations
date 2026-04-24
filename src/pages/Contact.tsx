@@ -8,10 +8,32 @@ import { WebGLShader } from '@/src/components/ui/web-gl-shader';
 import { LiquidButton } from '@/src/components/ui/liquid-glass-button';
 
 export default function Contact() {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'needs_key'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'needs_key' | 'rate_limited'>('idle');
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Rate Limiting Logic: Max 10 per minute
+    const now = Date.now();
+    const storedTimes = localStorage.getItem('submitAttemptTimes');
+    let attemptTimes: number[] = [];
+    if (storedTimes) {
+      try {
+        attemptTimes = JSON.parse(storedTimes);
+        // Only keep attempts from the last 60 seconds
+        attemptTimes = attemptTimes.filter((t) => now - t < 60000);
+      } catch (err) {}
+    }
+
+    if (attemptTimes.length >= 10) {
+      setStatus('rate_limited');
+      return;
+    }
+
+    // Record this attempt
+    attemptTimes.push(now);
+    localStorage.setItem('submitAttemptTimes', JSON.stringify(attemptTimes));
+
     setStatus('submitting');
     
     // Store a reference to the form element synchronously before any 'await' 
@@ -22,7 +44,7 @@ export default function Contact() {
     // Web3Forms uses a "Public Access Key" system. Since it sits behind Cloudflare's bot protection,
     // submissions MUST come directly from the web browser, making it completely safe and intended
     // that this key is defined here in the frontend facing code.
-    const WEB3FORMS_ACCESS_KEY = "f4834dcb-dffa-44c7-b967-447076b36277";
+    const WEB3FORMS_ACCESS_KEY = "0b25f57e-7921-4c05-8162-6cc68c91eaa8";
 
     formData.append("access_key", WEB3FORMS_ACCESS_KEY);
     formData.append("subject", "New Inquiry from Shrinidhi Creations");
@@ -129,6 +151,26 @@ export default function Contact() {
                 </button>
               </motion.div>
             )}
+
+            {status === 'rate_limited' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#121212]/95 backdrop-blur-md p-8 text-center border-t-4 border-yellow-500"
+              >
+                <IoWarningOutline className="w-20 h-20 text-yellow-500 mb-6" />
+                <h3 className="font-headline text-3xl uppercase tracking-tighter font-bold mb-4">Too Many Requests</h3>
+                <p className="font-body text-gray-300 mb-6 text-sm">
+                  You have sent too many inquiries recently. Please wait a minute before sending another.
+                </p>
+                <button 
+                  onClick={() => setStatus('idle')}
+                  className="mt-6 text-sm underline text-gray-400 hover:text-white"
+                >
+                  Go Back to Form
+                </button>
+              </motion.div>
+            )}
           </div>
 
           {/* Direct Contact Info */}
@@ -142,7 +184,7 @@ export default function Contact() {
                     icon: <IoLogoWhatsapp />,
                     gradientFrom: '#25D366',
                     gradientTo: '#128C7E',
-                    href: 'https://wa.me/919606643005'
+                    href: 'https://wa.me/918553868587'
                   },
                   {
                     title: 'Instagram',

@@ -1,9 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useInView } from 'motion/react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { products } from '../data/products';
+import { getProducts, type FirestoreProduct } from '../lib/products';
 
 const categories = ['All', 'F1 PRINT', 'MOVIE PRINT', 'KANNADA', '3D PRINT'];
+
+// Helper: get first image URL from either data shape
+function getFirstImage(product: any): string {
+  // Firestore product: has images[] array
+  if (product.images && product.images.length > 0) return product.images[0];
+  // Static product: has media[] array
+  if (product.media && product.media.length > 0) return product.media[0].url;
+  return '';
+}
 
 function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, imagesLoaded: Record<number, boolean>, onImageLoad: (id: number) => void }) {
   const ref = useRef(null);
@@ -32,7 +41,7 @@ function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, ima
             <img
               alt={product.name}
               className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imagesLoaded[product.id] ? 'opacity-100 scale-100' : 'opacity-0 scale-110'}`}
-              src={product.media[0].url}
+              src={getFirstImage(product)}
               loading="lazy"
               onLoad={() => onImageLoad(product.id)}
             />
@@ -46,9 +55,15 @@ function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, ima
         <div className="px-1 flex flex-col gap-1 transition-transform duration-500 group-hover:translate-x-1">
           <div className="flex justify-between items-start gap-2">
             <h3 className="font-bold text-sm md:text-base text-gray-100 leading-tight line-clamp-1">{product.name}</h3>
-            <span className="font-semibold text-sm md:text-base text-gray-100">{product.price}</span>
+            <span className="font-semibold text-sm md:text-base text-gray-100">
+              {product.price
+                ? (typeof product.price === 'number' ? `₹${product.price}` : product.price)
+                : ''}
+            </span>
           </div>
-          <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-1">{product.desc}</p>
+          <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-1">
+            {product.desc ?? product.description ?? ''}
+          </p>
         </div>
       </Link>
     </motion.div>
@@ -58,9 +73,19 @@ function ProductCard({ product, imagesLoaded, onImageLoad }: { product: any, ima
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
-  
+
   const [activeCategory, setActiveCategory] = useState(categoryParam || 'All');
-  const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
+  const [imagesLoaded, setImagesLoaded] = useState<Record<string | number, boolean>>({});
+  const [firestoreProducts, setFirestoreProducts] = useState<FirestoreProduct[]>([]);
+  const [fetchingFirestore, setFetchingFirestore] = useState(true);
+
+  // Fetch Firestore products on mount
+  useEffect(() => {
+    getProducts()
+      .then(setFirestoreProducts)
+      .catch((err) => console.error('Failed to fetch Firestore products:', err))
+      .finally(() => setFetchingFirestore(false));
+  }, []);
 
   useEffect(() => {
     if (categoryParam) {
@@ -80,20 +105,21 @@ export default function Shop() {
     setSearchParams(searchParams);
   };
 
-  const handleImageLoad = (id: number) => {
+  const handleImageLoad = (id: string | number) => {
     setImagesLoaded(prev => ({ ...prev, [id]: true }));
   };
 
-  const filteredProducts = activeCategory === 'All' 
-    ? products 
-    : products.filter(p => p.category === activeCategory);
+  // Gallery is 100% Firestore-driven
+  const filteredProducts = activeCategory === 'All'
+    ? firestoreProducts
+    : firestoreProducts.filter((p: any) => p.category === activeCategory);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-[#050505] min-h-screen text-white pt-24 pb-20"
+      className="bg-[#050505] min-h-screen text-white pt-24 pb-20 overflow-x-hidden"
     >
       <div className="px-4 md:px-8 max-w-screen-xl mx-auto w-full">
         {/* Aggressive NYC Typography Header */}
@@ -181,7 +207,9 @@ export default function Shop() {
           >
             <p className="text-gray-300 max-w-xl text-sm md:text-base font-medium leading-relaxed font-mono uppercase tracking-widest border-l-[3px] border-[#632dbc] pl-5">
               // About the Gallery <br/><br/>
-              A curated collection of heavyweight blanks, raw streetwear prints, and uncompromising custom tailoring built for the concrete streets. No rules, just raw expression.
+              A curated collection of heavyweight blanks, raw streetwear prints, and uncompromising custom tailoring built for the concrete streets. No rules, just raw expression. <br/><br/>
+              T-SHIRT - 240 GSM <br/>
+              HOODIE/SWEATSHIRT - 320 GSM
             </p>
             
             <div className="flex text-[10px] items-center gap-4 text-gray-500 font-mono tracking-widest uppercase">
@@ -209,13 +237,21 @@ export default function Shop() {
           ))}
         </div>
 
+        {/* Firestore loading indicator */}
+        {fetchingFirestore && (
+          <div className="flex items-center gap-2 mb-6 text-xs text-gray-500 font-mono tracking-widest uppercase">
+            <span className="w-2 h-2 rounded-full bg-[#632dbc] animate-ping inline-block" />
+            Loading new drops…
+          </div>
+        )}
+
         {/* Clean Premium Grid */}
         {filteredProducts.length > 0 ? (
           <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
             <AnimatePresence mode="popLayout">
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product: any) => (
                 <ProductCard 
-                  key={product.id} 
+                  key={String(product.id)} 
                   product={product} 
                   imagesLoaded={imagesLoaded} 
                   onImageLoad={handleImageLoad} 

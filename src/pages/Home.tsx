@@ -1,30 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { Button } from '@/src/components/Button';
 import { Link } from 'react-router-dom';
 import GradientMenu from '@/src/components/ui/gradient-menu';
 import { IoLogoWhatsapp, IoLogoInstagram } from 'react-icons/io5';
 import { StaggerTestimonials } from '@/src/components/ui/stagger-testimonials';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, MapPin, Mail, Phone, Clock } from 'lucide-react';
 
 const collections = [
-  { name: 'F1 PRINT', img: '/red-bull-1.jpg' },
-  { name: 'MOVIE PRINT', img: '/toxic-1.jpg' },
-  { name: 'KANNADA', img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop' },
-  { name: '3D PRINT', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=400&auto=format&fit=crop' },
+  { name: 'F1 PRINT', img: '/f1logo.jpg' },
+  { name: 'MOVIE PRINT', img: '/movie.jpg' },
+  { name: 'KANNADA', img: '/kannada.jpg' },
+  { name: '3D PRINT', img: '/3dlogo.png' },
 ];
 
 export default function Home() {
   const [isMuted, setIsMuted] = useState(true);
   const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
   const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
-  const [isFactoryExpanded, setIsFactoryExpanded] = useState(false);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
-  const handleImageLoad = (id: string) => {
+  const handleImageLoad = useCallback((id: string) => {
     setImagesLoaded(prev => ({ ...prev, [id]: true }));
-  };
+  }, []);
   
   // Track window resize to toggle active video
   useEffect(() => {
@@ -73,9 +72,11 @@ export default function Home() {
             loop
             muted={isMuted}
             playsInline
-            poster="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop"
+            preload="auto"
+            fetchPriority="high"
+            poster="/fallback%20hero.png"
             className="w-full h-full object-cover opacity-80"
-            src="/hero-video-desktop.mp4"
+            src="/hero%20section%20computer.webm"
           />
         ) : (
           <video
@@ -85,9 +86,11 @@ export default function Home() {
             loop
             muted={isMuted}
             playsInline
-            poster="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop"
+            preload="auto"
+            fetchPriority="high"
+            poster="/fallback%20hero.png"
             className="w-full h-full object-cover opacity-80"
-            src="/hero-video.mp4"
+            src="/hero%20section%20mobile.webm"
           />
         )}
         
@@ -110,7 +113,7 @@ export default function Home() {
                   icon: <IoLogoWhatsapp />,
                   gradientFrom: '#25D366',
                   gradientTo: '#128C7E',
-                  href: 'https://wa.me/919606643005'
+                  href: 'https://wa.me/918553868587'
                 },
                 {
                   title: 'Instagram',
@@ -156,6 +159,7 @@ export default function Home() {
                     className={`w-full h-full object-cover rounded-full transition-all duration-700 ease-out group-hover:rotate-6 ${imagesLoaded[item.name] ? 'opacity-100' : 'opacity-0'}`}
                     src={item.img}
                     loading="lazy"
+                    decoding="async"
                     onLoad={() => handleImageLoad(item.name)}
                     referrerPolicy="no-referrer"
                   />
@@ -166,79 +170,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* Factory / About Us Section - Removed on mobile for testing stability */}
-      {isDesktop && (
-        <section className="mt-32 px-6 max-w-screen-xl mx-auto w-full">
-          <div className="flex flex-col items-center">
-            <div className="inline-block px-3 py-1 bg-[#632dbc]/10 border border-[#632dbc]/20 rounded-full mb-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#632dbc]">The Source</span>
-            </div>
-            <h3 className="font-headline text-4xl md:text-6xl text-center uppercase tracking-tighter font-black italic mb-12">
-              Inside the <br/> Factory
-            </h3>
-            
-            <div className="relative w-full max-w-md group cursor-pointer" onClick={() => setIsFactoryExpanded(true)}>
-              <div className="aspect-[9/16] md:aspect-[3/4] bg-[#080808] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-[#632dbc]/50 group-hover:scale-[1.02] flex items-center justify-center">
-                <img 
-                  src="/factory-cover.jpg" 
-                  alt="Inside the Factory"
-                  loading="lazy"
-                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/40 group-hover:bg-black/20 transition-colors">
-                   <div className="w-16 h-16 bg-[#632dbc] rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(99,45,188,0.3)] transition-transform group-hover:scale-110">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 ml-1">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                   </div>
-                   <p className="mt-4 font-headline text-sm font-black uppercase tracking-widest italic group-hover:translate-y-1 transition-transform">Tap to see how we build</p>
-                </div>
-              </div>
-              {/* Ambient Glow */}
-              <div className="absolute -inset-10 bg-[#632dbc]/10 blur-3xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity -z-10" />
-            </div>
-          </div>
-
-          {/* Video Expansion Modal */}
-          <AnimatePresence>
-            {isFactoryExpanded && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4"
-                onClick={() => setIsFactoryExpanded(false)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9, y: 20 }}
-                  animate={{ scale: 1, y: 0 }}
-                  exit={{ scale: 0.9, y: 20 }}
-                  className="relative h-[80vh] aspect-[9/16] rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/10"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                   <video 
-                      autoPlay 
-                      controls 
-                      className="w-full h-full object-contain"
-                      src="/factory-video.mp4" 
-                   />
-                   <button 
-                    onClick={() => setIsFactoryExpanded(false)}
-                    className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 border border-white/10 text-white hover:bg-white/20 transition-all z-50"
-                   >
-                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                     </svg>
-                   </button>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
-      )}
 
       {/* Testimonials Section */}
       <section className="mt-40 px-6 max-w-screen-xl mx-auto w-full">
@@ -263,6 +194,125 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Comprehensive SEO Footer */}
+      <footer className="bg-[#050505] border-t border-white/10 pt-20 pb-24 px-6 mt-32 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+        
+        <div className="max-w-screen-xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
+          
+          {/* Column 1: About & Core Keywords */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-headline text-2xl font-black italic uppercase tracking-tighter text-white">
+              Shrinidhi Creations
+            </h4>
+            <div className="space-y-4">
+              <p className="font-body text-base text-gray-300 leading-relaxed">
+                At Shrinidhi Creations, we offer premium <strong className="text-white font-semibold">custom t shirt printing in Bangalore</strong>. 
+                Express yourself with our unique styles, heavyweight fabrics, and uncompromising quality.
+              </p>
+              <div className="flex gap-4">
+                <a href="https://wa.me/916360949521" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-[#25D366] hover:bg-white/10 transition-colors">
+                  <IoLogoWhatsapp size={20} />
+                </a>
+                <a href="https://www.instagram.com/_shrinidhi_creations_?igsh=MXIwdnIwbTluNjJocA==" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-[#E1306C] hover:bg-white/10 transition-colors">
+                  <IoLogoInstagram size={20} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: Our Services (Keywords) */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-headline text-lg font-bold uppercase tracking-widest text-primary border-l-2 border-primary pl-3">
+              Our Services
+            </h4>
+            <ul className="space-y-3 font-body text-base text-gray-300">
+              <li><Link to="/gallery" className="hover:text-white transition-colors">Custom T-Shirt Printing</Link></li>
+              <li><Link to="/gallery" className="hover:text-white transition-colors">3D T-Shirt Printing Near Me</Link></li>
+              <li><Link to="/gallery" className="hover:text-white transition-colors">Bulk Custom Tees Bangalore</Link></li>
+              <li><Link to="/gallery" className="hover:text-white transition-colors">F1 & Movie Prints</Link></li>
+              <li><Link to="/gallery" className="hover:text-white transition-colors">DTF & Screen Printing</Link></li>
+            </ul>
+          </div>
+
+          {/* Column 3: Serving Locations */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-headline text-lg font-bold uppercase tracking-widest text-[#e0d95d] border-l-2 border-[#e0d95d] pl-3">
+              Serving Bangalore
+            </h4>
+            <p className="font-body text-base text-gray-300 leading-relaxed">
+              Proudly serving all major areas in Bangalore. Whether you are looking for a <strong className="text-white font-normal hover:text-white transition-all cursor-crosshair">custom t shirt shop in Whitefield</strong>, Indiranagar, Koramangala or beyond, we deliver fast and high quality custom apparel right to your doorstep.
+            </p>
+            <ul className="space-y-2 font-body text-sm text-gray-300 font-medium uppercase tracking-widest">
+              <li>• Nagasandra</li>
+              <li>• Whitefield</li>
+              <li>• Koramangala</li>
+              <li>• Indiranagar</li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Maps */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-headline text-lg font-bold uppercase tracking-widest text-white border-l-2 border-white pl-3">
+              Contact Info
+            </h4>
+            <div className="space-y-4 font-body text-base text-gray-300">
+              <div className="flex items-start gap-3">
+                <Phone size={18} className="text-primary shrink-0 mt-0.5" />
+                <a href="tel:+916360949521" className="hover:text-white transition-colors">
+                  +91 6360949521
+                </a>
+              </div>
+              <div className="flex items-start gap-3">
+                <Mail size={18} className="text-primary shrink-0 mt-0.5" />
+                <a href="mailto:shrinidhi.creations.07@gmail.com" className="hover:text-white transition-colors">
+                  shrinidhi.creations.07@gmail.com
+                </a>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin size={18} className="text-primary shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  No 57 Samruddhi nelaya muneshwara layout, behind Parle biscuit factory near Arvindh Electrical’s Nagasandra post, Bangalore 560073
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Clock size={18} className="text-primary shrink-0 mt-0.5" />
+                <p>Mon - Sun (10:00 AM - 9:00 PM)</p>
+              </div>
+            </div>
+
+            {/* Embedded Google Map */}
+            <div className="w-full h-40 rounded-xl overflow-hidden border border-white/20 mt-4 shadow-lg">
+              <iframe 
+                src="https://maps.google.com/maps?q=Nagasandra,+Bengaluru,+560073&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={false} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Shrinidhi Creations Location Map"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+
+        {/* Admin Portal — subtle footer link & Copyright */}
+        <div className="max-w-screen-xl mx-auto w-full flex flex-col md:flex-row items-center justify-between border-t border-white/5 mt-16 pt-8">
+          <p className="text-xs text-white/30 font-body uppercase tracking-widest mb-4 md:mb-0">
+            © 2026 Shrinidhi Creations. All Rights Reserved.
+          </p>
+          <Link
+            to="/admin"
+            className="text-[10px] text-white/20 hover:text-white/60 transition-all duration-500 font-mono tracking-[0.3em] uppercase select-none bg-white/5 px-4 py-2 rounded-full"
+          >
+            ⚙ Staff Login
+          </Link>
+        </div>
+      </footer>
     </motion.div>
+
   );
 }
