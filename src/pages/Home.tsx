@@ -334,34 +334,23 @@ export default function Home() {
         </div>
 
         {/* Developer Credit Box */}
-        <div className="flex justify-center mt-4 pb-8 z-20 relative">
+        <div className="flex justify-center mt-4 pb-8 z-20 relative px-4">
           <a
             href="https://wa.me/919606643005"
             target="_blank"
             rel="noreferrer"
-            className="group relative overflow-hidden rounded-2xl p-[3px] cursor-pointer"
+            className="group relative overflow-hidden rounded-2xl p-[3px] cursor-pointer max-w-full"
           >
              {/* Aggressive fast conic gradient spin */}
              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ff3366_30%,#393BB2_70%,#000000_100%)]"></span>
              
              {/* Inner UI container */}
-             <div className="relative flex h-full w-full items-center justify-center bg-[#050505] rounded-[0.9rem] px-8 py-3 backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0a0a0a] gap-4 shadow-[0_0_30px_rgba(255,51,102,0.4)]">
-                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">⚡</span>
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-white/60 uppercase tracking-[0.4em] font-black pb-1">Developed By</span>
-                  <span className="text-white font-headline font-black italic tracking-widest text-2xl bg-clip-text text-transparent bg-gradient-to-r from-[#ff3366] to-[#393BB2] group-hover:from-[#ff6699] group-hover:to-[#4a4ec4] transition-all duration-300 flex">
-                    {"JD Developers".split('').map((char, index) => (
-                      <span 
-                        key={index} 
-                        className="animate-flicker-letter" 
-                        style={{ 
-                          animationDelay: `${index * 0.15}s`, 
-                          width: char === ' ' ? '0.25em' : 'auto' 
-                        }}
-                      >
-                        {char}
-                      </span>
-                    ))}
+             <div className="relative flex h-full w-full items-center justify-center bg-[#050505] rounded-[0.9rem] px-5 sm:px-8 py-3 backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0a0a0a] gap-3 sm:gap-4 shadow-[0_0_30px_rgba(255,51,102,0.4)]">
+                <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-300 shrink-0">⚡</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[10px] text-white/60 uppercase tracking-[0.25em] sm:tracking-[0.4em] font-black pb-1 truncate">Developed By</span>
+                  <span className="text-white font-headline font-black italic tracking-widest text-lg sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-[#ff3366] to-[#393BB2] group-hover:from-[#ff6699] group-hover:to-[#4a4ec4] transition-all duration-300 whitespace-nowrap">
+                    JD WebDev
                   </span>
                 </div>
              </div>
